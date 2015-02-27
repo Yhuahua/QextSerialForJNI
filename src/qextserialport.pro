@@ -53,5 +53,5 @@ unix:VERSION            = 1.2.0
 OTHER_FILES += \
     Note.Qt5.html
 
-INCLUDEPATH += C:\Java\jdk1.8.0_25\include \
-C:\Java\jdk1.8.0_25\include\win32
+INCLUDEPATH += I:\Java\Home\jdk1.8.0_25\include \
+I:\Java\Home\jdk1.8.0_25\include\win32
