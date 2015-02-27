@@ -17,9 +17,9 @@ jstring storJstring(JNIEnv* env, const char* pat)
 jboolean setSerialPort(JNIEnv *env, jstring portname, jstring baudrate, jstring flowcontrol, jstring parity, jint databits, jint stopbits , jint timeoutMilliSeconds)
 {
   jboolean result=false;
-  const char *nativeString = env->GetStringUTFChars(portname, 0);
-  QString portName=QString::fromStdString(nativeString);
-  port=new QextSerialPort(portName);
+  //const char *nativeString = env->GetStringUTFChars(portname, 0);
+ // QString portName=QString::fromStdString(nativeString);
+  port=new QextSerialPort("COM17");
   port->setBaudRate(BAUD19200);
   port->setFlowControl(FLOW_OFF);
   port->setParity(PAR_NONE);
@@ -55,10 +55,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_OpenSerial
         setSerialPort(env,portname, baudrate, flowcontrol, parity, databits, stopbits , timeoutMilliSeconds);
     }
 
-    if(port->isOpen()){
-        result=true;
-    }
-
+    result=true;
     return result;
 }
 
@@ -88,7 +85,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_SendByteSt
 {
     jboolean result=false;
     char* data = (char*)env->GetByteArrayElements(inputData, 0);
-    QString message=QString::fromStdString(data);
+    QString message="QString::fromStdString(data);";
     port->write(message.toLatin1(), message.length());
     result=true;
     return result;
