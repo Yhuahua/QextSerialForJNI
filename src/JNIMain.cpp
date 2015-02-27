@@ -14,8 +14,9 @@ jstring storJstring(JNIEnv* env, const char* pat)
     return (jstring)env->NewObject(strClass, ctorID, bytes, encoding);
 }
 
-bool setSerialPort(JNIEnv *env, jstring portname, jstring baudrate, jstring flowcontrol, jstring parity, jint databits, jint stopbits , jint timeoutMilliSeconds)
+jboolean setSerialPort(JNIEnv *env, jstring portname, jstring baudrate, jstring flowcontrol, jstring parity, jint databits, jint stopbits , jint timeoutMilliSeconds)
 {
+  jboolean result=false;
   const char *nativeString = env->GetStringUTFChars(portname, 0);
   QString portName=QString::fromStdString(nativeString);
   port=new QextSerialPort(portName);
@@ -27,7 +28,8 @@ bool setSerialPort(JNIEnv *env, jstring portname, jstring baudrate, jstring flow
   //set timeouts to 500 ms
   port->setTimeout(500);
   port->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
-  return true;
+  result=true;
+  return result;
 }
 
 /*
@@ -35,7 +37,7 @@ bool setSerialPort(JNIEnv *env, jstring portname, jstring baudrate, jstring flow
  * Method:    OpenSerialPort
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;III)Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_OpenSerialPort
+JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_OpenSerialPort
   (JNIEnv * env, jclass strClass, jstring portname, jstring baudrate, jstring flowcontrol, jstring parity, jint databits, jint stopbits , jint timeoutMilliSeconds)
 {
     jboolean result=false;
@@ -43,7 +45,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_OpenSerialPort
     if(port != NULL)
     {
         if(port->isOpen()){
-            Java_com_greenstar_hardware_HWRS232_CloseSerialPort(env, strClass, portname);
+            Java_com_greenstar_kernel_hardware_HWRS232_CloseSerialPort(env, strClass, portname);
         }
 
         delete port;
@@ -65,7 +67,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_OpenSerialPort
  * Method:    CloseSerialPort
  * Signature: (Ljava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_CloseSerialPort
+JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_CloseSerialPort
   (JNIEnv *, jclass, jstring)
 {
     if(port != NULL){
@@ -81,7 +83,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_CloseSerialPort
  * Method:    sendByteStream
  * Signature: ([B)Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_sendByteStream
+JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_SendByteStream
   (JNIEnv *env, jclass, jbyteArray inputData)
 {
     jboolean result=false;
@@ -97,7 +99,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_sendByteStream
  * Method:    getByteStream
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_greenstar_hardware_HWRS232_GetByteStream
+JNIEXPORT jstring JNICALL Java_com_greenstar_kernel_hardware_HWRS232_GetByteStream
   (JNIEnv * env, jclass)
 {
    // setSerialPort(true, "COM11");
