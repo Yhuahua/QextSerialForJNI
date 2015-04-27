@@ -249,8 +249,9 @@ void Win_QextSerialPort::init()
     m_vFan2=0;
     m_iFan1=0;
     m_iFan2=0;
+    QString portN="Port Name=" + this->portName();
     CommonHelper::Log((char*)"init Win_QextSerialPort");
-
+    CommonHelper::Log(portN.toLatin1().data());
 }
 
 /*!

@@ -72,17 +72,21 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_OpenSerial
  * Method:    CloseSerialPort
  * Signature: (Ljava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_CloseSerialPort
-  (JNIEnv *, jclass, jstring)
-{
+JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_CloseSerialPort
+  (JNIEnv *env, jclass, jstring data)
+{       
     if(port != NULL)
     {
         port->close();
         delete port;
         port = NULL;
+
+        QString logString=QString(TranslateJStringToString(env, data));
+        logString="Close the port=" + logString;
+        CommonHelper::Log(logString.toLatin1().data());
     }
 
-    return false;
+    return true;
 }
 
 
@@ -91,7 +95,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_CloseSerialPort
  * Method:    sendByteStream
  * Signature: ([B)Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_sendByteStream
+JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_sendByteStream
   (JNIEnv * env, jclass, jbyteArray strIn)
 {
     jboolean result=false;
@@ -114,7 +118,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_sendByteStream
  * Method:    getByteStream
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_greenstar_hardware_HWRS232_GetByteStream
+JNIEXPORT jstring JNICALL Java_com_greenstar_kernel_hardware_HWRS232_GetByteStream
   (JNIEnv *env, jclass rootClass)
 {
     char* str="";
