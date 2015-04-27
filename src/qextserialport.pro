@@ -19,9 +19,9 @@ INCLUDEDIR              = .
 HEADERS                 = qextserialbase.h \
                           qextserialport.h \
                           qextserialenumerator.h \
-    com_greenstar_hardware_HWRS232.h \
     commonhelper.h \
-    qextserialporconfig.h
+    qextserialporconfig.h \
+    com_greenstar_kernel_hardware_HWRS232.h
 SOURCES                 = qextserialbase.cpp \
                           qextserialport.cpp \
                           qextserialenumerator.cpp \

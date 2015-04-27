@@ -1,4 +1,4 @@
-#include "com_greenstar_hardware_HWRS232.h"
+#include "com_greenstar_kernel_hardware_HWRS232.h"
 #include "qextserialport.h"
 #include "qextserialporconfig.h"
 
@@ -14,54 +14,57 @@ jstring storJstring(JNIEnv* env, const char* pat)
     return (jstring)env->NewObject(strClass, ctorID, bytes, encoding);
 }
 
-bool setSerialPort(bool openFlag, QString portName){
+const char* TranslateJStringToString(JNIEnv* env, jstring jstr)
+{
+    char* rtn = NULL;
+    jclass clsstring = env->FindClass("java/lang/String");
+    jstring strencode = env->NewStringUTF("utf-8");
+    jmethodID mid = env->GetMethodID(clsstring, "getBytes", "(Ljava/lang/String;)[B");
+    jbyteArray barr= (jbyteArray)env->CallObjectMethod(jstr, mid, strencode);
+    jsize alen = env->GetArrayLength(barr);
+    jbyte* ba = env->GetByteArrayElements(barr, JNI_FALSE);
 
-    if(port != NULL){
-
-        if(port->isOpen()){
-
-            if(!openFlag){
-               port->close();
-            }
-
-        }
-        else{
-            if(openFlag){
-                    port=new QextSerialPort(portName);
-                    port->setBaudRate(QextSerialPorConfig::BAUD19200);
-                    port->setFlowControl(QextSerialPorConfig::FLOW_OFF);
-                    port->setParity(QextSerialPorConfig::PAR_NONE);
-                    port->setDataBits(QextSerialPorConfig::DATA_8);
-                    port->setStopBits(QextSerialPorConfig::STOP_2);
-                    //set timeouts to 500 ms
-                    port->setTimeout(500);
-                    port->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
-                }
-        }
+    if (alen > 0)
+    {
+        rtn = (char*)malloc(alen + 1);
+        memcpy(rtn, ba, alen);
+        rtn[alen] = 0;
     }
-    else if(openFlag){
-        port=new QextSerialPort(portName);
-        port->setBaudRate(QextSerialPorConfig::BAUD19200);
-        port->setFlowControl(QextSerialPorConfig::FLOW_OFF);
-        port->setParity(QextSerialPorConfig::PAR_NONE);
-        port->setDataBits(QextSerialPorConfig::DATA_8);
-        port->setStopBits(QextSerialPorConfig::STOP_2);
-        //set timeouts to 500 ms
-        port->setTimeout(500);
-        port->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
-    }
-    return true;
+    env->ReleaseByteArrayElements(barr, ba, 0);
+    return rtn;
 }
 
 /*
- * Class:     com_greenstar_hardware_HWRS232
+ * Class:     com_greenstar_kernel_hardware_HWRS232
  * Method:    OpenSerialPort
- * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;III)Z
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;D)Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_OpenSerialPort
-  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jint, jint, jint)
+JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_OpenSerialPort
+  (JNIEnv *env, jclass rootClass, jstring portName, jstring baudRate, jstring flowControl, jstring parity, jstring dataBits, jstring stopBits, jdouble timeoutMilliSeconds)
 {
-    return false;
+    jboolean result=false;
+
+    try{
+            port=new QextSerialPort(QString(TranslateJStringToString(env, portName)));
+            port->setBaudRate(QString(TranslateJStringToString(env, baudRate)));
+            port->setFlowControl(QString(TranslateJStringToString(env, flowControl)));
+            port->setParity(QString(TranslateJStringToString(env, parity)));
+            port->setDataBits(QString(TranslateJStringToString(env, dataBits)));
+            port->setStopBits(QString(TranslateJStringToString(env, stopBits)));
+            port->setTimeout(timeoutMilliSeconds);
+            port->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
+
+            if(port->isOpen())
+            {
+                result=true;
+            }
+    }
+    catch(...)
+    {
+        qDebug("Too bad, cannot initalize port");
+    }
+
+    return result;
 }
 
 /*
@@ -72,6 +75,13 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_OpenSerialPort
 JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_CloseSerialPort
   (JNIEnv *, jclass, jstring)
 {
+    if(port != NULL)
+    {
+        port->close();
+        delete port;
+        port = NULL;
+    }
+
     return false;
 }
 
@@ -82,9 +92,19 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_CloseSerialPort
  * Signature: ([B)Z
  */
 JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_sendByteStream
-  (JNIEnv *, jclass, jbyteArray)
+  (JNIEnv * env, jclass, jbyteArray strIn)
 {
     jboolean result=false;
+
+    if(port != NULL)
+    {
+        if(port->isOpen())
+        {
+            char* data=(char*) env->GetByteArrayElements(strIn, 0);
+            port->write(data);
+            CommonHelper::Log(data);
+        }
+    }
 
     return result;
 }
@@ -95,8 +115,54 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_hardware_HWRS232_sendByteStream
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_com_greenstar_hardware_HWRS232_GetByteStream
-  (JNIEnv * env, jclass)
+  (JNIEnv *env, jclass rootClass)
 {
-   // setSerialPort(true, "COM11");
-    return storJstring(env, "port->portName().toLocal8Bit()");
+    char* str="";
+    jstring data=env->NewStringUTF(str);
+
+    if(port != NULL)
+    {
+      char buff[1024];
+      int numBytes;
+
+      numBytes = port->bytesAvailable();
+      if(numBytes > 1024)
+          numBytes = 1024;
+
+      int i = port->read(buff, numBytes);
+      if (i != -1)
+          buff[i] = '\0';
+      else
+          buff[0] = '\0';
+      QString msg = buff;
+
+      QString value=QString(numBytes);
+      value="number bytes=" + value;
+      CommonHelper::Log(value.toLatin1().data());
+
+      data=storJstring(env, msg.toLatin1());
+    }
+
+    return data;
+}
+
+/*
+ * Class:     com_greenstar_kernel_hardware_HWRS232
+ * Method:    ResettSerialPort
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_ResettSerialPort
+  (JNIEnv *, jclass)
+{
+    jboolean result=false;
+
+    if(port != NULL)
+    {
+        port->close();
+        delete port;
+        port=NULL;
+        result=true;
+    }
+
+    return result;
 }

@@ -146,52 +146,6 @@ QFile LogFile;
 #define SHOW2 TRUE  //<-data
 #define SHOW3 TRUE  //data->
 #define SHOW4 TRUE  //data<-
-/**
-****************************************************************************************************************
-@ description:�Ndata�g�Jlog��
-@ param:char* string: ���g�J������
-@ author: Yu-Hua Tseng
-@ date: 2010.05.22
-@ version: 1.0
-@ Histroy: Initial version.
-****************************************************************************************************************
-*/
-void To_Log_File(char* string)
-{
-    QDateTime DT;
-
-    QTextStream out(&LogFile);
-
-    out <<"["<<DT.currentDateTime().toString("yyyy.MM.dd hh:mm:ss").toLocal8Bit().data()<< "]"<<":"<<string<<"\n";
-
-//   qDebug("%s",string);
-}
-
-/**
-****************************************************************************************************************
-@ description:���l��log�� (QFile)
-@ author: Yu-Hua Tseng
-@ date: 2010.05.23
-@ version: 1.0
-@ Histroy: Initial version.
-2010.06.04: �ץ�log�ɦs�����|
-****************************************************************************************************************
-*/
-void Initial_Log_File()
-{
-
-    LogFile.setFileName("Log_GreenUI.txt");
-
-    if(!LogFile.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        To_Log_File((char*)"Open or create GreenLog Fail\n");
-
-        return;
-    }
-
-    To_Log_File((char*)"**********************************Log Start**********************************\n");
-
-}
 
 Win_QextSerialPort::Win_QextSerialPort():
     QextSerialBase()
@@ -295,7 +249,7 @@ void Win_QextSerialPort::init()
     m_vFan2=0;
     m_iFan1=0;
     m_iFan2=0;
-    Initial_Log_File();
+    CommonHelper::Log((char*)"init Win_QextSerialPort");
 
 }
 
@@ -311,7 +265,7 @@ Win_QextSerialPort::~Win_QextSerialPort()
     }
     delete overlapThread;
     delete bytesToWriteLock;
-    To_Log_File((char*)"**********************************Log End**********************************\n");
+    CommonHelper::Log((char*)"**********************************Log End**********************************\n");
     LogFile.close();
 }
 
@@ -589,7 +543,7 @@ bool Win_QextSerialPort::doSendCommand(char * cHead,char *cAddress,char *cComman
 #ifdef SHOW3
     char szCmd[128];
     sprintf(szCmd,"%s ->",cSendData);
-    To_Log_File(szCmd);
+    CommonHelper::Log(szCmd);
 #endif
     if (!WriteFile(Win_Handle, (void*)cSendData, (DWORD)dataSize, & dwSend, NULL))
     {
@@ -623,7 +577,7 @@ bool Win_QextSerialPort::doRecReturn(char cHead,char *cAddress,char *cCommand)
 #ifdef SHOW4
         char szCmd[128];
         sprintf(szCmd,"%s <-",szRead);
-        To_Log_File(szCmd);
+        CommonHelper::Log(szCmd);
 #endif
         if(NULL!=strstr(szRead,">"))
         {
@@ -645,7 +599,7 @@ bool Win_QextSerialPort::doRecReturn(char cHead,char *cAddress,char *cCommand)
 #ifdef SHOW2
     char szCmd[128];
     sprintf(szCmd,"<- %s",szRead);
-    To_Log_File(szCmd);
+    CommonHelper::Log(szCmd);
 #endif
     memcpy(g_buffer+m_bufferlength,szRead,strlen(szRead));
     m_bufferlength+=strlen(szRead);
@@ -669,7 +623,7 @@ bool Win_QextSerialPort::doRecReturnNULL(void)
 #ifdef SHOW4
         char szCmd[128];
         sprintf(szCmd,"%s <-",szRead);
-        To_Log_File(szCmd);
+        CommonHelper::Log(szCmd);
 #endif
     }
     else
@@ -702,7 +656,7 @@ bool Win_QextSerialPort::doRecReturnX(char cHead,char *cAddress,char *cCommand,i
 #ifdef SHOW2
     char szCmd[128];
     sprintf(szCmd,"<- %s",szRead);
-    To_Log_File(szCmd);
+    CommonHelper::Log(szCmd);
 #endif
     memcpy(g_buffer+m_bufferlength,szRead,strlen(szRead));
     m_bufferlength+=strlen(szRead);
@@ -727,7 +681,7 @@ bool Win_QextSerialPort::doRecReturnSS(char cHead,char *cAddress,char *cCommand)
 #ifdef SHOW2
     char szCmd[128];
     sprintf(szCmd,"<- %s",szRead);
-    To_Log_File(szCmd);
+    CommonHelper::Log(szCmd);
 #endif
     memcpy(g_buffer+m_bufferlength,szRead,strlen(szRead));
     m_bufferlength+=strlen(szRead);
@@ -795,7 +749,7 @@ bool Win_QextSerialPort::doRecReturn851(char cHead,char *cAddress,int val03,int 
 #ifdef SHOW2
     char szCmd[128];
     sprintf(szCmd,"<- %s",szRead);
-    To_Log_File(szCmd);
+    CommonHelper::Log(szCmd);
 #endif
     memcpy(g_buffer+m_bufferlength,szRead,strlen(szRead));
     m_bufferlength+=strlen(szRead);
@@ -863,7 +817,7 @@ bool Win_QextSerialPort::doRecReturn852(char cHead,char *cAddress,int val03,int 
 #ifdef SHOW2
     char szCmd[128];
     sprintf(szCmd,"<- %s",szRead);
-    To_Log_File(szCmd);
+    CommonHelper::Log(szCmd);
 #endif
     memcpy(g_buffer+m_bufferlength,szRead,strlen(szRead));
     m_bufferlength+=strlen(szRead);
@@ -893,7 +847,7 @@ bool Win_QextSerialPort::doRecTemperature(char cHead,char *cAddress,int iType)
 #ifdef SHOW4
         char szCmd[128];
         sprintf(szCmd,"%s <-",szRead);
-        To_Log_File(szCmd);
+        CommonHelper::Log(szCmd);
 #endif
 
 
@@ -937,7 +891,7 @@ bool Win_QextSerialPort::doRecTemperature(char cHead,char *cAddress,int iType)
 #ifdef SHOW2
         char szCmdx[128];
         sprintf(szCmdx,"<- %s",szRead);
-        To_Log_File(szCmdx);
+        CommonHelper::Log(szCmdx);
 #endif
         memcpy(g_buffer+m_bufferlength,szRead,strlen(szRead));
         m_bufferlength+=strlen(szRead);
@@ -968,7 +922,7 @@ bool Win_QextSerialPort::doRecHumidity(char cHead,char *cAddress ,int iType)
 #ifdef SHOW4
         char szCmd[128];
         sprintf(szCmd,"%s <-",szRead);
-        To_Log_File(szCmd);
+        CommonHelper::Log(szCmd);
 #endif
         sscanf(szRead,">%f\r",&fRead);
         if(0 == iType)
@@ -995,7 +949,7 @@ bool Win_QextSerialPort::doRecHumidity(char cHead,char *cAddress ,int iType)
 #ifdef SHOW2
         char szCmdx[128];
         sprintf(szCmdx,"<- %s",szRead);
-        To_Log_File(szCmdx);
+        CommonHelper::Log(szCmdx);
 #endif
         memcpy(g_buffer+m_bufferlength,szRead,strlen(szRead));
         m_bufferlength+=strlen(szRead);
@@ -1027,7 +981,7 @@ bool Win_QextSerialPort::doRecIlluminance(char cHead,char *cAddress)
 #ifdef SHOW4
         char szCmd[128];
         sprintf(szCmd,"%s <-",szRead);
-        To_Log_File(szCmd);
+        CommonHelper::Log(szCmd);
 #endif
         sscanf(szRead,">%f\r",&fRead);
         if(0==m_defLutronType)
@@ -1061,7 +1015,7 @@ bool Win_QextSerialPort::doRecIlluminance(char cHead,char *cAddress)
 #ifdef SHOW2
         char szCmdx[128];
         sprintf(szCmdx,"<- %s",szRead);
-        To_Log_File(szCmdx);
+        CommonHelper::Log(szCmdx);
 #endif
         memcpy(g_buffer+m_bufferlength,szRead,strlen(szRead));
         m_bufferlength+=strlen(szRead);
@@ -1090,7 +1044,7 @@ int Win_QextSerialPort::doRecReturnVIN(void)
 #ifdef SHOW4
         char szCmd[128];
         sprintf(szCmd,"%s <-",szRead);
-        To_Log_File(szCmd);
+        CommonHelper::Log(szCmd);
 #endif
         sscanf(szRead,"!03+%f\r",&fReturn);
         fReturn*=10;
@@ -1115,7 +1069,7 @@ int Win_QextSerialPort::doRecReturnGIN(void)
 #ifdef SHOW4
         char szCmd[128];
         sprintf(szCmd,"%s <-",szRead);
-        To_Log_File(szCmd);
+        CommonHelper::Log(szCmd);
 #endif
         sscanf(szRead,">%x\r",&bReturn);
     }
@@ -1172,7 +1126,7 @@ void Win_QextSerialPort::StartStop(void)
         #ifdef SHOW1
                                 char szCmd[128];
                                 sprintf(szCmd,"start: %c%s%s",cHead,cAddress,cCommand);
-                                To_Log_File(szCmd);
+                                CommonHelper::Log(szCmd);
         #endif
                                 gcHead303=cHead;
                                 strcpy(gcAddress303,cAddress);
@@ -1183,7 +1137,7 @@ void Win_QextSerialPort::StartStop(void)
         #ifdef SHOW1
                                 char szCmd[128];
                                 sprintf(szCmd,"same: %c%s%s",cHead,cAddress,cCommand);
-                                To_Log_File(szCmd);
+                                CommonHelper::Log(szCmd);
         #endif
                                 doRecReturnX(cHead,cAddress,cCommand,1);
                             }
@@ -1197,7 +1151,7 @@ void Win_QextSerialPort::StartStop(void)
         #ifdef SHOW1
                                 char szCmd[128];
                                 sprintf(szCmd,"start: %c%s%s",cHead,cAddress,cCommand);
-                                To_Log_File(szCmd);
+                                CommonHelper::Log(szCmd);
         #endif
                                 gcHead303=cHead;
                                 strcpy(gcAddress303,cAddress);
@@ -1208,7 +1162,7 @@ void Win_QextSerialPort::StartStop(void)
         #ifdef SHOW1
                                 char szCmd[128];
                                 sprintf(szCmd,"same: %c%s%s",cHead,cAddress,cCommand);
-                                To_Log_File(szCmd);
+                                CommonHelper::Log(szCmd);
         #endif
                                 doRecReturnX(cHead,cAddress,cCommand,1);
                             }
@@ -1469,7 +1423,7 @@ void Win_QextSerialPort::StartStop(void)
 #ifdef SHOW1
                 char szCmd[128];
                 sprintf(szCmd,"cmd: %s is end at %d",cCommand,i);
-                To_Log_File(szCmd);
+                CommonHelper::Log(szCmd);
 #endif
                 bwBosswin[i].isUse=false;
         }
@@ -1654,39 +1608,39 @@ qint64 Win_QextSerialPort::writeData(const char *data, qint64 maxSize)
 #ifdef SHOW1
               //      char szCmd[128];
               ////      sprintf(szCmd,"i:%d deliverState:%d char:%c maxSize:%d",i,deliverState,data[i],maxSize);
-              //      To_Log_File(szCmd);
+              //      CommonHelper::Log(szCmd);
 #endif
         switch(deliverState)
         {
             case START:
-        //    To_Log_File("step1");
+        //    CommonHelper::Log("step1");
                 if((data[i] == USER1_STX0)||(data[i] == USER1_STX1)||(data[i] == USER1_STX2)||(data[i] == USER1_STX3))
                 {
-               //     To_Log_File("step2");
+               //     CommonHelper::Log("step2");
                     cHead=data[i];
                     deliverState = ADDRESS;
                     tempByteCount=0;
-               //     To_Log_File("step21");
+               //     CommonHelper::Log("step21");
                 }
                 else
                 {
-                  //  To_Log_File("step3");
+                  //  CommonHelper::Log("step3");
 
                     retStatus = FAILURE;
                 }
                 break;
 
             case ADDRESS:
-                //To_Log_File("step4");
+                //CommonHelper::Log("step4");
 
                 if(USER1_ETX0 == data[i])
                 {
-                //    To_Log_File("step5");
+                //    CommonHelper::Log("step5");
 
                     deliverState = START;
                     break;
                 }
-               // To_Log_File("step6");
+               // CommonHelper::Log("step6");
 
                 cAddress[tempByteCount]=data[i];
                 if(++tempByteCount == 2)
@@ -1749,7 +1703,7 @@ qint64 Win_QextSerialPort::writeData(const char *data, qint64 maxSize)
 #ifdef SHOW1
                     char szCmd[128];
                     sprintf(szCmd,"-> %c%s%s%s*",cHead,cAddress,cCommand,cChecksum);
-                    To_Log_File(szCmd);
+                    CommonHelper::Log(szCmd);
 #endif
                                         for(l=0; l<MaxCmd; l++)
                                         {
@@ -1758,7 +1712,7 @@ qint64 Win_QextSerialPort::writeData(const char *data, qint64 maxSize)
 #ifdef SHOW1
                 char szCmd[128];
                 sprintf(szCmd,"cmd: %s is start at %d",cCommand,l);
-                To_Log_File(szCmd);
+                CommonHelper::Log(szCmd);
 #endif
                                                 LOCK_MUTEX();
                                                 bwBosswin[l].Head=cHead;
@@ -1774,7 +1728,7 @@ qint64 Win_QextSerialPort::writeData(const char *data, qint64 maxSize)
 #ifdef SHOW1
                                             char szCmd[128];
                                             sprintf(szCmd,"buffer full!");
-                                            To_Log_File(szCmd);
+                                            CommonHelper::Log(szCmd);
 #endif
                                         }
 
@@ -1786,19 +1740,19 @@ qint64 Win_QextSerialPort::writeData(const char *data, qint64 maxSize)
                     retStatus = FAILURE;
                 break;
             default:
-             //   To_Log_File("step9");
+             //   CommonHelper::Log("step9");
                 //PRINTF("#! INVALID INTERNAL ERROR IN user1_Deliver");
                 break;
         }
-        //To_Log_File("stepx1");
+        //CommonHelper::Log("stepx1");
         if(retStatus == FAILURE)
         {
-       //     To_Log_File("stepx2");
+       //     CommonHelper::Log("stepx2");
             deliverState = START;
             //PRINTF(" Error in parsing the buffer received from IoStream");
             break;
         }
-       // To_Log_File("stepx3");
+       // CommonHelper::Log("stepx3");
     }
 
     return (qint64)retVal;
@@ -2449,33 +2403,45 @@ void Win_QextSerialThread::run()
 
 
 void Win_QextSerialPort::setBaudRate(QString value)
-{
+{        
     this->setBaudRate((QextSerialPorConfig::BaudRateType) CommonHelper::GetValueFromEnum("BaudRateType", value));
+    value="setBaudRate " + value;
+    CommonHelper::Log(value.toLatin1().data());
 }
 
 void Win_QextSerialPort::setDataBits(QString value)
-{
+{    
     this->setDataBits((QextSerialPorConfig::DataBitsType) CommonHelper::GetValueFromEnum("DataBitsType", value));
+    value="setDataBits " + value;
+    CommonHelper::Log(value.toLatin1().data());
 }
 
 void Win_QextSerialPort::setParity(QString value)
-{
+{  
     this->setParity((QextSerialPorConfig::ParityType) CommonHelper::GetValueFromEnum("ParityType", value));
+    value="setParity " + value;
+    CommonHelper::Log(value.toLatin1().data());
 }
 
 void Win_QextSerialPort::setStopBits(QString value)
-{
+{  
     this->setStopBits((QextSerialPorConfig::StopBitsType) CommonHelper::GetValueFromEnum("StopBitsType", value));
+    value="setStopBits " + value;
+    CommonHelper::Log(value.toLatin1().data());
 }
 
 void Win_QextSerialPort::setFlowControl(QString value)
-{
+{    
     this->setFlowControl((QextSerialPorConfig::FlowType) CommonHelper::GetValueFromEnum("FlowType", value));
+    value="setFlowControl " + value;
+    CommonHelper::Log(value.toLatin1().data());
 }
 
 
 void Win_QextSerialPort::setTimeout(QString value)
-{
+{   
     bool transok=false;
     this->setTimeout(value.toLong(&transok, 10));
+    value="setTimeout " + value;
+    CommonHelper::Log(value.toLatin1().data());
 }
