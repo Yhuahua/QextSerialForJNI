@@ -60,11 +60,11 @@ Common constructor function for setting up default port settings.
 */
 void QextSerialBase::construct()
 {
-    Settings.BaudRate=BAUD115200;
-    Settings.DataBits=DATA_8;
-    Settings.Parity=PAR_NONE;
-    Settings.StopBits=STOP_1;
-    Settings.FlowControl=FLOW_HARDWARE;
+    Settings.BaudRate=QextSerialPorConfig::BAUD115200;
+    Settings.DataBits=QextSerialPorConfig::DATA_8;
+    Settings.Parity=QextSerialPorConfig::PAR_NONE;
+    Settings.StopBits=QextSerialPorConfig::STOP_1;
+    Settings.FlowControl=QextSerialPorConfig::FLOW_HARDWARE;
     Settings.Timeout_Millisec=500;
 	mutex = new QMutex( QMutex::Recursive );
 	setOpenMode(QIODevice::NotOpen);
@@ -98,7 +98,7 @@ QString QextSerialBase::portName() const
 Returns the baud rate of the serial port.  For a list of possible return values see
 the definition of the enum BaudRateType.
 */
-BaudRateType QextSerialBase::baudRate(void) const
+QextSerialPorConfig::BaudRateType QextSerialBase::baudRate(void) const
 {
     return Settings.BaudRate;
 }
@@ -108,7 +108,7 @@ BaudRateType QextSerialBase::baudRate(void) const
 Returns the number of data bits used by the port.  For a list of possible values returned by
 this function, see the definition of the enum DataBitsType.
 */
-DataBitsType QextSerialBase::dataBits() const
+QextSerialPorConfig::DataBitsType QextSerialBase::dataBits() const
 {
     return Settings.DataBits;
 }
@@ -118,7 +118,7 @@ DataBitsType QextSerialBase::dataBits() const
 Returns the type of parity used by the port.  For a list of possible values returned by
 this function, see the definition of the enum ParityType.
 */
-ParityType QextSerialBase::parity() const
+QextSerialPorConfig::ParityType QextSerialBase::parity() const
 {
     return Settings.Parity;
 }
@@ -128,7 +128,7 @@ ParityType QextSerialBase::parity() const
 Returns the number of stop bits used by the port.  For a list of possible return values, see
 the definition of the enum StopBitsType.
 */
-StopBitsType QextSerialBase::stopBits() const
+QextSerialPorConfig::StopBitsType QextSerialBase::stopBits() const
 {
     return Settings.StopBits;
 }
@@ -138,7 +138,7 @@ StopBitsType QextSerialBase::stopBits() const
 Returns the type of flow control used by the port.  For a list of possible values returned
 by this function, see the definition of the enum FlowType.
 */
-FlowType QextSerialBase::flowControl() const
+QextSerialPorConfig::FlowType QextSerialBase::flowControl() const
 {
     return Settings.FlowControl;
 }

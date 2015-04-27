@@ -4,6 +4,8 @@
 #include "qextserialbase.h"
 #include <windows.h>
 #include <QThread>
+#include "commonhelper.h"
+#include "qextserialporconfig.h"
 
 
 /*if all warning messages are turned off, flag portability warnings to be turned off as well*/
@@ -78,17 +80,23 @@ class Win_QextSerialPort: public QextSerialBase
 	    virtual void flush();
 	    virtual qint64 size() const;
 	    virtual void ungetChar(char c);
-	    virtual void setFlowControl(FlowType);
-	    virtual void setParity(ParityType);
-	    virtual void setDataBits(DataBitsType);
-	    virtual void setStopBits(StopBitsType);
-	    virtual void setBaudRate(BaudRateType);
+        virtual void setFlowControl(QextSerialPorConfig::FlowType);
+        virtual void setParity(QextSerialPorConfig::ParityType);
+        virtual void setDataBits(QextSerialPorConfig::DataBitsType);
+        virtual void setStopBits(QextSerialPorConfig::StopBitsType);
+        virtual void setBaudRate(QextSerialPorConfig::BaudRateType);
+        virtual void setFlowControl(QString);
+        virtual void setParity(QString);
+        virtual void setDataBits(QString);
+        virtual void setStopBits(QString);
+        virtual void setBaudRate(QString);
 	    virtual void setDtr(bool set=true);
 	    virtual void setRts(bool set=true);
 	    virtual ulong lineStatus(void);
 	    virtual qint64 bytesAvailable();
 	    virtual void translateError(ulong);
 	    virtual void setTimeout(long);
+        virtual void setTimeout(QString);
 
         void StartStop();
         bool doSendCommand(char * cHead,char *cAddress,char *cCommand);

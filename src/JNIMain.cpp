@@ -1,6 +1,6 @@
 #include "com_greenstar_hardware_HWRS232.h"
 #include "qextserialport.h"
-
+#include "qextserialporconfig.h"
 
 QextSerialPort *port=NULL;
 
@@ -28,11 +28,11 @@ bool setSerialPort(bool openFlag, QString portName){
         else{
             if(openFlag){
                     port=new QextSerialPort(portName);
-                    port->setBaudRate(BAUD19200);
-                    port->setFlowControl(FLOW_OFF);
-                    port->setParity(PAR_NONE);
-                    port->setDataBits(DATA_8);
-                    port->setStopBits(STOP_2);
+                    port->setBaudRate(QextSerialPorConfig::BAUD19200);
+                    port->setFlowControl(QextSerialPorConfig::FLOW_OFF);
+                    port->setParity(QextSerialPorConfig::PAR_NONE);
+                    port->setDataBits(QextSerialPorConfig::DATA_8);
+                    port->setStopBits(QextSerialPorConfig::STOP_2);
                     //set timeouts to 500 ms
                     port->setTimeout(500);
                     port->open(QIODevice::ReadWrite | QIODevice::Unbuffered);
@@ -41,11 +41,11 @@ bool setSerialPort(bool openFlag, QString portName){
     }
     else if(openFlag){
         port=new QextSerialPort(portName);
-        port->setBaudRate(BAUD19200);
-        port->setFlowControl(FLOW_OFF);
-        port->setParity(PAR_NONE);
-        port->setDataBits(DATA_8);
-        port->setStopBits(STOP_2);
+        port->setBaudRate(QextSerialPorConfig::BAUD19200);
+        port->setFlowControl(QextSerialPorConfig::FLOW_OFF);
+        port->setParity(QextSerialPorConfig::PAR_NONE);
+        port->setDataBits(QextSerialPorConfig::DATA_8);
+        port->setStopBits(QextSerialPorConfig::STOP_2);
         //set timeouts to 500 ms
         port->setTimeout(500);
         port->open(QIODevice::ReadWrite | QIODevice::Unbuffered);

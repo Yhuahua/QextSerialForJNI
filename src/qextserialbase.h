@@ -5,6 +5,8 @@
 #include <QFile>
 #include <QThread>
 #include <QMutex>
+#include <QtCore>
+#include "QextSerialPorConfig.h"
 
 /*if all warning messages are turned off, flag portability warnings to be turned off as well*/
 #ifdef _TTY_NOWARN_
@@ -69,73 +71,16 @@ enum NamingConvention
     LINUX_NAMES
 };
 
-enum BaudRateType 
-{
-    BAUD50,                //POSIX ONLY
-    BAUD75,                //POSIX ONLY
-    BAUD110,
-    BAUD134,               //POSIX ONLY
-    BAUD150,               //POSIX ONLY
-    BAUD200,               //POSIX ONLY
-    BAUD300,
-    BAUD600,
-    BAUD1200,
-    BAUD1800,              //POSIX ONLY
-    BAUD2400,
-    BAUD4800,
-    BAUD9600,
-    BAUD14400,             //WINDOWS ONLY
-    BAUD19200,
-    BAUD38400,
-    BAUD56000,             //WINDOWS ONLY
-    BAUD57600,
-    BAUD76800,             //POSIX ONLY
-    BAUD115200,
-    BAUD128000,            //WINDOWS ONLY
-    BAUD256000             //WINDOWS ONLY
-};
-
-enum DataBitsType 
-{
-    DATA_5,
-    DATA_6,
-    DATA_7,
-    DATA_8
-};
-
-enum ParityType 
-{
-    PAR_NONE,
-    PAR_ODD,
-    PAR_EVEN,
-    PAR_MARK,               //WINDOWS ONLY
-    PAR_SPACE
-};
-
-enum StopBitsType 
-{
-    STOP_1,
-    STOP_1_5,               //WINDOWS ONLY
-    STOP_2
-};
-
-enum FlowType 
-{
-    FLOW_OFF,
-    FLOW_HARDWARE,
-    FLOW_XONXOFF
-};
-
 /**
  * structure to contain port settings
  */
 struct PortSettings 
 {
-    BaudRateType BaudRate;
-    DataBitsType DataBits;
-    ParityType Parity;
-    StopBitsType StopBits;
-    FlowType FlowControl;
+    QextSerialPorConfig::BaudRateType BaudRate;
+    QextSerialPorConfig::DataBitsType DataBits;
+    QextSerialPorConfig::ParityType Parity;
+    QextSerialPorConfig::StopBitsType StopBits;
+    QextSerialPorConfig::FlowType FlowControl;
     long Timeout_Millisec;
 };
 
@@ -205,17 +150,23 @@ class QextSerialBase : public QIODevice
 
 //		virtual void setBlockingRead(bool block) = 0; ///< @todo implement.
 
-	    virtual void setBaudRate(BaudRateType)=0;
-	    virtual BaudRateType baudRate() const;
-	    virtual void setDataBits(DataBitsType)=0;
-	    virtual DataBitsType dataBits() const;
-	    virtual void setParity(ParityType)=0;
-	    virtual ParityType parity() const;
-	    virtual void setStopBits(StopBitsType)=0;
-	    virtual StopBitsType stopBits() const;
-	    virtual void setFlowControl(FlowType)=0;
-	    virtual FlowType flowControl() const;
+        virtual void setBaudRate(QextSerialPorConfig::BaudRateType)=0;
+        virtual void setBaudRate(QString)=0;
+        virtual QextSerialPorConfig::BaudRateType baudRate() const;
+        virtual void setDataBits(QextSerialPorConfig::DataBitsType)=0;
+        virtual void setDataBits(QString)=0;
+        virtual QextSerialPorConfig::DataBitsType dataBits() const;
+        virtual void setParity(QextSerialPorConfig::ParityType)=0;
+        virtual void setParity(QString)=0;
+        virtual QextSerialPorConfig::ParityType parity() const;
+        virtual void setStopBits(QextSerialPorConfig::StopBitsType)=0;
+        virtual void setStopBits(QString)=0;
+        virtual QextSerialPorConfig::StopBitsType stopBits() const;
+        virtual void setFlowControl(QextSerialPorConfig::FlowType)=0;
+        virtual void setFlowControl(QString)=0;
+        virtual QextSerialPorConfig::FlowType flowControl() const;
 	    virtual void setTimeout(long)=0;
+        virtual void setTimeout(QString)=0;
 	
 	    virtual bool open(OpenMode mode)=0;
 	    virtual bool isSequential() const;

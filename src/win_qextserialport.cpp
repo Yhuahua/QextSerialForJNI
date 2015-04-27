@@ -1826,7 +1826,7 @@ Sets the flow control used by the port.  Possible values of flow are:
     FLOW_XONXOFF        Software (XON/XOFF) flow control
 \endverbatim
 */
-void Win_QextSerialPort::setFlowControl(FlowType flow)
+void Win_QextSerialPort::setFlowControl(QextSerialPorConfig::FlowType flow)
 {
         LOCK_MUTEX();
     if (Settings.FlowControl!=flow)
@@ -1839,7 +1839,7 @@ void Win_QextSerialPort::setFlowControl(FlowType flow)
         {
 
                 /*no flow control*/
-            case FLOW_OFF:
+            case QextSerialPorConfig::FLOW_OFF:
                 Win_CommConfig.dcb.fOutxCtsFlow=FALSE;
                 Win_CommConfig.dcb.fRtsControl=RTS_CONTROL_DISABLE;
                 Win_CommConfig.dcb.fInX=FALSE;
@@ -1848,7 +1848,7 @@ void Win_QextSerialPort::setFlowControl(FlowType flow)
                 break;
 
                 /*software (XON/XOFF) flow control*/
-            case FLOW_XONXOFF:
+            case QextSerialPorConfig::FLOW_XONXOFF:
                 Win_CommConfig.dcb.fOutxCtsFlow=FALSE;
                 Win_CommConfig.dcb.fRtsControl=RTS_CONTROL_DISABLE;
                 Win_CommConfig.dcb.fInX=TRUE;
@@ -1856,7 +1856,7 @@ void Win_QextSerialPort::setFlowControl(FlowType flow)
                 SetCommConfig(Win_Handle, &Win_CommConfig, sizeof(COMMCONFIG));
                 break;
 
-            case FLOW_HARDWARE:
+            case QextSerialPorConfig::FLOW_HARDWARE:
                 Win_CommConfig.dcb.fOutxCtsFlow=TRUE;
                 Win_CommConfig.dcb.fRtsControl=RTS_CONTROL_HANDSHAKE;
                 Win_CommConfig.dcb.fInX=FALSE;
@@ -1879,7 +1879,7 @@ Sets the parity associated with the serial port.  The possible values of parity 
     PAR_ODD         Odd Parity
 \endverbatim
 */
-void Win_QextSerialPort::setParity(ParityType parity)
+void Win_QextSerialPort::setParity(QextSerialPorConfig::ParityType parity)
 {
         LOCK_MUTEX();
     if (Settings.Parity!=parity)
@@ -1893,8 +1893,8 @@ void Win_QextSerialPort::setParity(ParityType parity)
         {
 
                 /*space parity*/
-            case PAR_SPACE:
-                if (Settings.DataBits==DATA_8)
+            case QextSerialPorConfig::PAR_SPACE:
+                if (Settings.DataBits==QextSerialPorConfig::DATA_8)
                 {
                     TTY_PORTABILITY_WARNING("Win_QextSerialPort Portability Warning: Space parity with 8 data bits is not supported by POSIX systems.");
                 }
@@ -1902,23 +1902,23 @@ void Win_QextSerialPort::setParity(ParityType parity)
                 break;
 
                 /*mark parity - WINDOWS ONLY*/
-            case PAR_MARK:
+            case QextSerialPorConfig::PAR_MARK:
                 TTY_PORTABILITY_WARNING("Win_QextSerialPort Portability Warning:  Mark parity is not supported by POSIX systems");
                 Win_CommConfig.dcb.fParity=TRUE;
                 break;
 
                 /*no parity*/
-            case PAR_NONE:
+            case QextSerialPorConfig::PAR_NONE:
                 Win_CommConfig.dcb.fParity=FALSE;
                 break;
 
                 /*even parity*/
-            case PAR_EVEN:
+            case QextSerialPorConfig::PAR_EVEN:
                 Win_CommConfig.dcb.fParity=TRUE;
                 break;
 
                 /*odd parity*/
-            case PAR_ODD:
+            case QextSerialPorConfig::PAR_ODD:
                 Win_CommConfig.dcb.fParity=TRUE;
                 break;
         }
@@ -1947,13 +1947,13 @@ This function is subject to the following restrictions:
     8 data bits cannot be used with space parity on POSIX systems.
 
 */
-void Win_QextSerialPort::setDataBits(DataBitsType dataBits)
+void Win_QextSerialPort::setDataBits(QextSerialPorConfig::DataBitsType dataBits)
 {
         LOCK_MUTEX();
     if (Settings.DataBits!=dataBits)
     {
-        if ((Settings.StopBits==STOP_2 && dataBits==DATA_5) ||
-                (Settings.StopBits==STOP_1_5 && dataBits!=DATA_5))
+        if ((Settings.StopBits==QextSerialPorConfig::STOP_2 && dataBits==QextSerialPorConfig::DATA_5) ||
+                (Settings.StopBits==QextSerialPorConfig::STOP_1_5 && dataBits!=QextSerialPorConfig::DATA_5))
         {
         }
         else
@@ -1967,8 +1967,8 @@ void Win_QextSerialPort::setDataBits(DataBitsType dataBits)
         {
 
                 /*5 data bits*/
-            case DATA_5:
-                if (Settings.StopBits==STOP_2)
+            case QextSerialPorConfig::DATA_5:
+                if (Settings.StopBits==QextSerialPorConfig::STOP_2)
                 {
                     TTY_WARNING("Win_QextSerialPort: 5 Data bits cannot be used with 2 stop bits.");
                 }
@@ -1980,8 +1980,8 @@ void Win_QextSerialPort::setDataBits(DataBitsType dataBits)
                 break;
 
                 /*6 data bits*/
-            case DATA_6:
-                if (Settings.StopBits==STOP_1_5)
+            case QextSerialPorConfig::DATA_6:
+                if (Settings.StopBits==QextSerialPorConfig::STOP_1_5)
                 {
                     TTY_WARNING("Win_QextSerialPort: 6 Data bits cannot be used with 1.5 stop bits.");
                 }
@@ -1993,8 +1993,8 @@ void Win_QextSerialPort::setDataBits(DataBitsType dataBits)
                 break;
 
                 /*7 data bits*/
-            case DATA_7:
-                if (Settings.StopBits==STOP_1_5)
+            case QextSerialPorConfig::DATA_7:
+                if (Settings.StopBits==QextSerialPorConfig::STOP_1_5)
                 {
                     TTY_WARNING("Win_QextSerialPort: 7 Data bits cannot be used with 1.5 stop bits.");
                 }
@@ -2006,8 +2006,8 @@ void Win_QextSerialPort::setDataBits(DataBitsType dataBits)
                 break;
 
                 /*8 data bits*/
-            case DATA_8:
-                if (Settings.StopBits==STOP_1_5)
+            case QextSerialPorConfig::DATA_8:
+                if (Settings.StopBits==QextSerialPorConfig::STOP_1_5)
                 {
                     TTY_WARNING("Win_QextSerialPort: 8 Data bits cannot be used with 1.5 stop bits.");
                 }
@@ -2040,13 +2040,13 @@ This function is subject to the following restrictions:
 \par
     POSIX does not support 1.5 stop bits.
 */
-void Win_QextSerialPort::setStopBits(StopBitsType stopBits)
+void Win_QextSerialPort::setStopBits(QextSerialPorConfig::StopBitsType stopBits)
 {
         LOCK_MUTEX();
     if (Settings.StopBits!=stopBits)
     {
-        if ((Settings.DataBits==DATA_5 && stopBits==STOP_2) ||
-                (stopBits==STOP_1_5 && Settings.DataBits!=DATA_5))
+        if ((Settings.DataBits==QextSerialPorConfig::DATA_5 && stopBits==QextSerialPorConfig::STOP_2) ||
+                (stopBits==QextSerialPorConfig::STOP_1_5 && Settings.DataBits!=QextSerialPorConfig::DATA_5))
         {
         }
         else
@@ -2060,15 +2060,15 @@ void Win_QextSerialPort::setStopBits(StopBitsType stopBits)
         {
 
                 /*one stop bit*/
-            case STOP_1:
+            case QextSerialPorConfig::STOP_1:
                 Win_CommConfig.dcb.StopBits=ONESTOPBIT;
                 SetCommConfig(Win_Handle, &Win_CommConfig, sizeof(COMMCONFIG));
                 break;
 
                 /*1.5 stop bits*/
-            case STOP_1_5:
+            case QextSerialPorConfig::STOP_1_5:
                 TTY_PORTABILITY_WARNING("Win_QextSerialPort Portability Warning: 1.5 stop bit operation is not supported by POSIX.");
-                if (Settings.DataBits!=DATA_5)
+                if (Settings.DataBits!=QextSerialPorConfig::DATA_5)
                 {
                     TTY_WARNING("Win_QextSerialPort: 1.5 stop bits can only be used with 5 data bits");
                 }
@@ -2080,8 +2080,8 @@ void Win_QextSerialPort::setStopBits(StopBitsType stopBits)
                 break;
 
                 /*two stop bits*/
-            case STOP_2:
-                if (Settings.DataBits==DATA_5)
+            case QextSerialPorConfig::STOP_2:
+                if (Settings.DataBits==QextSerialPorConfig::DATA_5)
                 {
                     TTY_WARNING("Win_QextSerialPort: 2 stop bits cannot be used with 5 data bits");
                 }
@@ -2130,27 +2130,27 @@ are speeds that are usable on both Windows and POSIX.
    BAUD256000          256000      115200
 \endverbatim
 */
-void Win_QextSerialPort::setBaudRate(BaudRateType baudRate)
+void Win_QextSerialPort::setBaudRate(QextSerialPorConfig::BaudRateType baudRate)
 {
         LOCK_MUTEX();
     if (Settings.BaudRate!=baudRate)
     {
         switch (baudRate)
         {
-            case BAUD50:
-            case BAUD75:
-            case BAUD134:
-            case BAUD150:
-            case BAUD200:
-                Settings.BaudRate=BAUD110;
+            case QextSerialPorConfig::BAUD50:
+            case QextSerialPorConfig::BAUD75:
+            case QextSerialPorConfig::BAUD134:
+            case QextSerialPorConfig::BAUD150:
+            case QextSerialPorConfig::BAUD200:
+                Settings.BaudRate=QextSerialPorConfig::BAUD110;
                 break;
 
-            case BAUD1800:
-                Settings.BaudRate=BAUD1200;
+            case QextSerialPorConfig::BAUD1800:
+                Settings.BaudRate=QextSerialPorConfig::BAUD1200;
                 break;
 
-            case BAUD76800:
-                Settings.BaudRate=BAUD57600;
+            case QextSerialPorConfig::BAUD76800:
+                Settings.BaudRate=QextSerialPorConfig::BAUD57600;
                 break;
 
             default:
@@ -2164,122 +2164,122 @@ void Win_QextSerialPort::setBaudRate(BaudRateType baudRate)
         {
 
                 /*50 baud*/
-            case BAUD50:
+            case QextSerialPorConfig::BAUD50:
                 TTY_WARNING("Win_QextSerialPort: Windows does not support 50 baud operation.  Switching to 110 baud.");
                 Win_CommConfig.dcb.BaudRate=CBR_110;
                 break;
 
                 /*75 baud*/
-            case BAUD75:
+            case QextSerialPorConfig::BAUD75:
                 TTY_WARNING("Win_QextSerialPort: Windows does not support 75 baud operation.  Switching to 110 baud.");
                 Win_CommConfig.dcb.BaudRate=CBR_110;
                 break;
 
                 /*110 baud*/
-            case BAUD110:
+            case QextSerialPorConfig::BAUD110:
                 Win_CommConfig.dcb.BaudRate=CBR_110;
                 break;
 
                 /*134.5 baud*/
-            case BAUD134:
+            case QextSerialPorConfig::BAUD134:
                 TTY_WARNING("Win_QextSerialPort: Windows does not support 134.5 baud operation.  Switching to 110 baud.");
                 Win_CommConfig.dcb.BaudRate=CBR_110;
                 break;
 
                 /*150 baud*/
-            case BAUD150:
+            case QextSerialPorConfig::BAUD150:
                 TTY_WARNING("Win_QextSerialPort: Windows does not support 150 baud operation.  Switching to 110 baud.");
                 Win_CommConfig.dcb.BaudRate=CBR_110;
                 break;
 
                 /*200 baud*/
-            case BAUD200:
+            case QextSerialPorConfig::BAUD200:
                 TTY_WARNING("Win_QextSerialPort: Windows does not support 200 baud operation.  Switching to 110 baud.");
                 Win_CommConfig.dcb.BaudRate=CBR_110;
                 break;
 
                 /*300 baud*/
-            case BAUD300:
+            case QextSerialPorConfig::BAUD300:
                 Win_CommConfig.dcb.BaudRate=CBR_300;
                 break;
 
                 /*600 baud*/
-            case BAUD600:
+            case QextSerialPorConfig::BAUD600:
                 Win_CommConfig.dcb.BaudRate=CBR_600;
                 break;
 
                 /*1200 baud*/
-            case BAUD1200:
+            case QextSerialPorConfig::BAUD1200:
                 Win_CommConfig.dcb.BaudRate=CBR_1200;
                 break;
 
                 /*1800 baud*/
-            case BAUD1800:
+            case QextSerialPorConfig::BAUD1800:
                 TTY_WARNING("Win_QextSerialPort: Windows does not support 1800 baud operation.  Switching to 1200 baud.");
                 Win_CommConfig.dcb.BaudRate=CBR_1200;
                 break;
 
                 /*2400 baud*/
-            case BAUD2400:
+            case QextSerialPorConfig::BAUD2400:
                 Win_CommConfig.dcb.BaudRate=CBR_2400;
                 break;
 
                 /*4800 baud*/
-            case BAUD4800:
+            case QextSerialPorConfig::BAUD4800:
                 Win_CommConfig.dcb.BaudRate=CBR_4800;
                 break;
 
                 /*9600 baud*/
-            case BAUD9600:
+            case QextSerialPorConfig::BAUD9600:
                 Win_CommConfig.dcb.BaudRate=CBR_9600;
                 break;
 
                 /*14400 baud*/
-            case BAUD14400:
+            case QextSerialPorConfig::BAUD14400:
                 TTY_PORTABILITY_WARNING("Win_QextSerialPort Portability Warning: POSIX does not support 14400 baud operation.");
                 Win_CommConfig.dcb.BaudRate=CBR_14400;
                 break;
 
                 /*19200 baud*/
-            case BAUD19200:
+            case QextSerialPorConfig::BAUD19200:
                 Win_CommConfig.dcb.BaudRate=CBR_19200;
                 break;
 
                 /*38400 baud*/
-            case BAUD38400:
+            case QextSerialPorConfig::BAUD38400:
                 Win_CommConfig.dcb.BaudRate=CBR_38400;
                 break;
 
                 /*56000 baud*/
-            case BAUD56000:
+            case QextSerialPorConfig::BAUD56000:
                 TTY_PORTABILITY_WARNING("Win_QextSerialPort Portability Warning: POSIX does not support 56000 baud operation.");
                 Win_CommConfig.dcb.BaudRate=CBR_56000;
                 break;
 
                 /*57600 baud*/
-            case BAUD57600:
+            case QextSerialPorConfig::BAUD57600:
                 Win_CommConfig.dcb.BaudRate=CBR_57600;
                 break;
 
                 /*76800 baud*/
-            case BAUD76800:
+            case QextSerialPorConfig::BAUD76800:
                 TTY_WARNING("Win_QextSerialPort: Windows does not support 76800 baud operation.  Switching to 57600 baud.");
                 Win_CommConfig.dcb.BaudRate=CBR_57600;
                 break;
 
                 /*115200 baud*/
-            case BAUD115200:
+            case QextSerialPorConfig::BAUD115200:
                 Win_CommConfig.dcb.BaudRate=CBR_115200;
                 break;
 
                 /*128000 baud*/
-            case BAUD128000:
+            case QextSerialPorConfig::BAUD128000:
                 TTY_PORTABILITY_WARNING("Win_QextSerialPort Portability Warning: POSIX does not support 128000 baud operation.");
                 Win_CommConfig.dcb.BaudRate=CBR_128000;
                 break;
 
                 /*256000 baud*/
-            case BAUD256000:
+            case QextSerialPorConfig::BAUD256000:
                 TTY_PORTABILITY_WARNING("Win_QextSerialPort Portability Warning: POSIX does not support 256000 baud operation.");
                 Win_CommConfig.dcb.BaudRate=CBR_256000;
                 break;
@@ -2445,4 +2445,37 @@ void Win_QextSerialThread::run()
        qesp->StartStop();
     }
     isRun=false;
+}
+
+
+void Win_QextSerialPort::setBaudRate(QString value)
+{
+    this->setBaudRate((QextSerialPorConfig::BaudRateType) CommonHelper::GetValueFromEnum("BaudRateType", value));
+}
+
+void Win_QextSerialPort::setDataBits(QString value)
+{
+    this->setDataBits((QextSerialPorConfig::DataBitsType) CommonHelper::GetValueFromEnum("DataBitsType", value));
+}
+
+void Win_QextSerialPort::setParity(QString value)
+{
+    this->setParity((QextSerialPorConfig::ParityType) CommonHelper::GetValueFromEnum("ParityType", value));
+}
+
+void Win_QextSerialPort::setStopBits(QString value)
+{
+    this->setStopBits((QextSerialPorConfig::StopBitsType) CommonHelper::GetValueFromEnum("StopBitsType", value));
+}
+
+void Win_QextSerialPort::setFlowControl(QString value)
+{
+    this->setFlowControl((QextSerialPorConfig::FlowType) CommonHelper::GetValueFromEnum("FlowType", value));
+}
+
+
+void Win_QextSerialPort::setTimeout(QString value)
+{
+    bool transok=false;
+    this->setTimeout(value.toLong(&transok, 10));
 }
