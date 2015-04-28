@@ -77,3 +77,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+#folder
+build-qextserialport-Desktop_Qt_5_4_0_MSVC2013_64bit-Debug/
