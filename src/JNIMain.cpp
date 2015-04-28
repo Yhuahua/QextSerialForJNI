@@ -95,7 +95,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_CloseSeria
  * Method:    sendByteStream
  * Signature: ([B)Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_sendByteStream
+JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_SendByteStream
   (JNIEnv * env, jclass, jbyteArray strIn)
 {
     jboolean result=false;
