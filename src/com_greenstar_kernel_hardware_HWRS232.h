@@ -47,6 +47,14 @@ JNIEXPORT jstring JNICALL Java_com_greenstar_kernel_hardware_HWRS232_GetByteStre
 JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_ResettSerialPort
   (JNIEnv *, jclass);
 
+/*
+ * Class:     com_greenstar_kernel_hardware_HWRS232
+ * Method:    GetAvailableSerialPorts
+ * Signature: ()[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_com_greenstar_kernel_hardware_HWRS232_GetAvailableSerialPorts
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

@@ -1,6 +1,7 @@
 #include "com_greenstar_kernel_hardware_HWRS232.h"
 #include "qextserialport.h"
 #include "qextserialporconfig.h"
+#include <QtSerialPort/QSerialPortInfo>
 
 QextSerialPort *port=NULL;
 
@@ -169,4 +170,29 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_ResettSeri
     }
 
     return result;
+}
+
+/*
+ * Class:     com_greenstar_kernel_hardware_HWRS232
+ * Method:    GetAvailableSerialPorts
+ * Signature: ()[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_com_greenstar_kernel_hardware_HWRS232_GetAvailableSerialPorts
+  (JNIEnv *env, jclass rootClass)
+{
+      QList<QSerialPortInfo> list = QSerialPortInfo::availablePorts();
+
+      jobjectArray strarr = env->NewObjectArray(list.count(), env->FindClass("java/lang/String"), nullptr);
+
+      int index=0;
+
+      foreach(QSerialPortInfo portInfo , list)
+      {
+           QString portInfoString="Port : " + QString(portInfo.portName());
+           CommonHelper::Log(portInfoString.toLatin1().data());
+           env->SetObjectArrayElement(strarr, index, env->NewStringUTF(portInfo.portName().toLatin1().data()));
+           index++;
+      }
+
+      return strarr;
 }

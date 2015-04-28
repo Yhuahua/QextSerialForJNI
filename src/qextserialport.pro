@@ -11,6 +11,7 @@ CONFIG                 += debug_and_release
 #CONFIG			+= staticlib
 
 QT                     -= gui
+QT += serialport
 
 OBJECTS_DIR             = build/obj
 MOC_DIR                 = build/moc

@@ -71,6 +71,9 @@ bool CommonHelper::InitLogFile()
 
     if(LogFile.open(QIODevice::WriteOnly | QIODevice::Text))
     {
+        QString qtVersion=QT_VERSION_STR;
+        qtVersion="Qt version=" + qtVersion;
+        CommonHelper::Log((char*)qtVersion.toLatin1().data());
         CommonHelper::Log((char*)"**********************************Log Start**********************************\n");
         result=true;
     }
