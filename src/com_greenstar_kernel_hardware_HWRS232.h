@@ -12,7 +12,7 @@ extern "C" {
  * Method:    OpenSerialPort
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;D)Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_OpenSerialPort
+JNIEXPORT jboolean JNICALL _Java_com_greenstar_kernel_hardware_HWRS232_OpenSerialPort
   (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jstring, jdouble);
 
 /*
@@ -20,7 +20,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_OpenSerial
  * Method:    CloseSerialPort
  * Signature: (Ljava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_CloseSerialPort
+JNIEXPORT jboolean JNICALL _Java_com_greenstar_kernel_hardware_HWRS232_CloseSerialPort
   (JNIEnv *, jclass, jstring);
 
 /*
@@ -28,7 +28,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_CloseSeria
  * Method:    SendByteStream
  * Signature: ([B)Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_SendByteStream
+JNIEXPORT jboolean JNICALL _Java_com_greenstar_kernel_hardware_HWRS232_SendByteStream
   (JNIEnv *, jclass, jbyteArray);
 
 /*
@@ -36,7 +36,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_SendByteSt
  * Method:    GetByteStream
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_greenstar_kernel_hardware_HWRS232_GetByteStream
+JNIEXPORT jstring JNICALL _Java_com_greenstar_kernel_hardware_HWRS232_GetByteStream
   (JNIEnv *, jclass);
 
 /*
@@ -44,7 +44,7 @@ JNIEXPORT jstring JNICALL Java_com_greenstar_kernel_hardware_HWRS232_GetByteStre
  * Method:    ResettSerialPort
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_ResettSerialPort
+JNIEXPORT jboolean JNICALL _Java_com_greenstar_kernel_hardware_HWRS232_ResettSerialPort
   (JNIEnv *, jclass);
 
 /*
@@ -52,7 +52,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_ResettSeri
  * Method:    GetAvailableSerialPorts
  * Signature: ()[Ljava/lang/String;
  */
-JNIEXPORT jobjectArray JNICALL Java_com_greenstar_kernel_hardware_HWRS232_GetAvailableSerialPorts
+JNIEXPORT jobjectArray JNICALL _Java_com_greenstar_kernel_hardware_HWRS232_GetAvailableSerialPorts
   (JNIEnv *, jclass);
 
 #ifdef __cplusplus

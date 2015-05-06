@@ -30,9 +30,13 @@ SOURCES                 = qextserialbase.cpp \
     commonhelper.cpp \
     qextserialporconfig.cpp
 
-unix:HEADERS           += posix_qextserialport.h
-unix:SOURCES           += posix_qextserialport.cpp
-unix:DEFINES           += _TTY_POSIX_
+#unix:HEADERS           += posix_qextserialport.h
+#unix:SOURCES           += posix_qextserialport.cpp
+#unix:DEFINES           += _TTY_POSIX_
+
+unix:HEADERS           += win_qextserialport.h
+unix:SOURCES           += win_qextserialport.cpp
+unix:DEFINES           += _TTY_WIN_
 
 
 win32:HEADERS          += win_qextserialport.h
@@ -58,8 +62,8 @@ unix:VERSION            = 1.2.0
 OTHER_FILES += \
     Note.Qt5.html
 
-INCLUDEPATH += D:\Java\jdk1.8.0_25\include \
-D:\Java\jdk1.8.0_25\include\win32
+INCLUDEPATH += D:\Java\jdk1.8.0_45\include \
+D:\Java\jdk1.8.0_45\include\win32
 
 #INCLUDEPATH += I:\Java\Home\jdk1.8.0_25\include \
 #I:\Java\Home\jdk1.8.0_25\include\win32

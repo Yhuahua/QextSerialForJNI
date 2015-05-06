@@ -40,7 +40,7 @@ const char* TranslateJStringToString(JNIEnv* env, jstring jstr)
  * Method:    OpenSerialPort
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;D)Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_OpenSerialPort
+JNIEXPORT jboolean JNICALL _Java_com_greenstar_kernel_hardware_HWRS232_OpenSerialPort
   (JNIEnv *env, jclass rootClass, jstring portName, jstring baudRate, jstring flowControl, jstring parity, jstring dataBits, jstring stopBits, jdouble timeoutMilliSeconds)
 {
     jboolean result=false;
@@ -73,7 +73,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_OpenSerial
  * Method:    CloseSerialPort
  * Signature: (Ljava/lang/String;)Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_CloseSerialPort
+JNIEXPORT jboolean JNICALL _Java_com_greenstar_kernel_hardware_HWRS232_CloseSerialPort
   (JNIEnv *env, jclass, jstring data)
 {       
     if(port != NULL)
@@ -96,7 +96,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_CloseSeria
  * Method:    sendByteStream
  * Signature: ([B)Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_SendByteStream
+JNIEXPORT jboolean JNICALL _Java_com_greenstar_kernel_hardware_HWRS232_SendByteStream
   (JNIEnv * env, jclass, jbyteArray strIn)
 {
     jboolean result=false;
@@ -119,7 +119,7 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_SendByteSt
  * Method:    getByteStream
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_greenstar_kernel_hardware_HWRS232_GetByteStream
+JNIEXPORT jstring JNICALL _Java_com_greenstar_kernel_hardware_HWRS232_GetByteStream
   (JNIEnv *env, jclass rootClass)
 {
     char* str="";
@@ -156,7 +156,7 @@ JNIEXPORT jstring JNICALL Java_com_greenstar_kernel_hardware_HWRS232_GetByteStre
  * Method:    ResettSerialPort
  * Signature: ()Z
  */
-JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_ResettSerialPort
+JNIEXPORT jboolean JNICALL _Java_com_greenstar_kernel_hardware_HWRS232_ResettSerialPort
   (JNIEnv *, jclass)
 {
     jboolean result=false;
@@ -177,12 +177,12 @@ JNIEXPORT jboolean JNICALL Java_com_greenstar_kernel_hardware_HWRS232_ResettSeri
  * Method:    GetAvailableSerialPorts
  * Signature: ()[Ljava/lang/String;
  */
-JNIEXPORT jobjectArray JNICALL Java_com_greenstar_kernel_hardware_HWRS232_GetAvailableSerialPorts
+JNIEXPORT jobjectArray JNICALL _Java_com_greenstar_kernel_hardware_HWRS232_GetAvailableSerialPorts
   (JNIEnv *env, jclass rootClass)
 {
       QList<QSerialPortInfo> list = QSerialPortInfo::availablePorts();
 
-      jobjectArray strarr = env->NewObjectArray(list.count(), env->FindClass("java/lang/String"), nullptr);
+      jobjectArray strarr = env->NewObjectArray(list.count(), env->FindClass("java/lang/String"), 0);
 
       int index=0;
 

@@ -23,7 +23,15 @@ toAscii 替换为 toLatin1
 头文件#include <initguid.h>引用的下方, 这个错误是头文件引用顺序
 不对导致的.
 
+5. about JNI application in Qt
+[refer to this]
+http://stackoverflow.com/questions/17199904/why-do-i-get-unsatisfiedlinkerror-when-calling-a-mingw-compiled-function-not-lo
 
+It turns out that MSVC prepends an underscore to the name of __stdcall functions. MinGW does not. The Windows JVM
+apparently expects the '_' prefix. As soon as I prepended '_' to the function name and rebuilt with MinGW,
+everything worked just dandy.
+
+-->JNIEXPORT void JNICALL Java_com_xyz_jsdi_1test_JSDI_func ==> _Java_com_xyz_jsdi_1test_JSDI_func
 
 
 QQ群: 113 148 289
